@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, ExternalLink, LayoutGrid, Monitor, Play, Smartphone, Tablet } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Code2, Eye, ExternalLink, LayoutGrid, Monitor, Play, Smartphone, Tablet } from 'lucide-react';
+import CodeView from './CodeView';
 import ControlPanel from './ControlPanel';
 import { MSG } from './messages';
 import { usePlaygroundDef } from './registry';
@@ -45,6 +46,8 @@ export default function PlaygroundShell(props: Props) {
 
 function ShellBody({ name, ja, en, index, total, search, onPrev, onNext, onHome, def }: Props & { def: PlaygroundDef }) {
   const [device, setDevice] = useState<Device>('desktop');
+  // プレビュー／コード の切り替え
+  const [tab, setTab] = useState<'preview' | 'code'>('preview');
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const controls = def.controls;
@@ -128,6 +131,26 @@ function ShellBody({ name, ja, en, index, total, search, onPrev, onNext, onHome,
             </button>
           ))}
         </div>
+        <div role="tablist" aria-label="表示切り替え" className="flex items-center rounded-lg bg-slate-100 p-0.5 dark:bg-slate-800">
+          {([
+            { id: 'preview', label: 'デモ', Icon: Eye },
+            { id: 'code', label: 'コード', Icon: Code2 },
+          ] as const).map(({ id, label, Icon }) => (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              aria-selected={tab === id}
+              onClick={() => setTab(id)}
+              className={`flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                tab === id ? 'bg-white text-indigo-600 shadow-sm dark:bg-slate-700 dark:text-indigo-300' : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              {label}
+            </button>
+          ))}
+        </div>
         <button type="button" onClick={() => post({ type: MSG.replay })} className={`${iconBtn} w-auto gap-1.5 px-3 text-xs font-semibold`} title="アニメーションを最初から再生">
           <Play className="h-3.5 w-3.5" />
           リプレイ
@@ -140,7 +163,9 @@ function ShellBody({ name, ja, en, index, total, search, onPrev, onNext, onHome,
       {/* ---- 本体：プレビュー＋パネル ---- */}
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
         <main className="relative flex min-h-[55dvh] flex-1 items-stretch justify-center overflow-auto bg-[radial-gradient(circle,#cbd5e1_1px,transparent_1px)] [background-size:20px_20px] p-0 dark:bg-[radial-gradient(circle,#334155_1px,transparent_1px)] lg:min-h-0 lg:p-4">
+          {tab === 'code' && <CodeView name={name} />}
           <iframe
+            hidden={tab === 'code'}
             ref={iframeRef}
             key={name}
             src={embedSrc}
