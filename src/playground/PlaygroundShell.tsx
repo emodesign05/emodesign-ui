@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, Code2, Eye, ExternalLink, LayoutGrid, Monitor, Play, Smartphone, Tablet } from 'lucide-react';
+import { BookOpen, ChevronLeft, ChevronRight, Code2, Eye, ExternalLink, LayoutGrid, Monitor, Play, Smartphone, Tablet } from 'lucide-react';
 import CodeView from './CodeView';
+import { notionPageUrl } from '../notionLinks';
 import ControlPanel from './ControlPanel';
 import { MSG } from './messages';
 import { usePlaygroundDef } from './registry';
@@ -151,6 +152,19 @@ function ShellBody({ name, ja, en, index, total, search, onPrev, onNext, onHome,
             </button>
           ))}
         </div>
+        {notionPageUrl(name) && (
+          <a
+            href={notionPageUrl(name)}
+            target="_blank"
+            rel="noreferrer"
+            className={`${iconBtn} w-auto gap-1.5 px-3 text-xs font-semibold`}
+            title="このコンポーネントのNotionページ（プロンプト・解説）を開く"
+          >
+            <BookOpen className="h-3.5 w-3.5" />
+            Notion
+            <span className="sr-only">（新しいタブで開く）</span>
+          </a>
+        )}
         <button type="button" onClick={() => post({ type: MSG.replay })} className={`${iconBtn} w-auto gap-1.5 px-3 text-xs font-semibold`} title="アニメーションを最初から再生">
           <Play className="h-3.5 w-3.5" />
           リプレイ

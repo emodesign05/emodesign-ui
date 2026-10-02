@@ -1,11 +1,13 @@
 import { Component, Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ComponentType, ErrorInfo, LazyExoticComponent, ReactNode } from 'react';
-import { ChevronLeft, ChevronRight, LayoutGrid, Search, EyeOff, SlidersHorizontal, X } from 'lucide-react';
+import { ArrowUpRight, BookOpen, ChevronLeft, ChevronRight, Code2, LayoutGrid, Search, EyeOff, SlidersHorizontal, X } from 'lucide-react';
 import { CATEGORIES, getMeta } from './componentMeta';
 import type { Category } from './componentMeta';
 import PlaygroundShell from './playground/PlaygroundShell';
 import EmbedRoot from './playground/EmbedRoot';
 import { PLAYGROUND_NAMES } from './playground/registry';
+import { NOTION_DATABASES, notionPageUrl, notionUrl } from './notionLinks';
+import { GITHUB_REPO } from './siteConfig';
 
 /* =========================================================
  * コンポーネント一覧プレビュー
@@ -217,6 +219,29 @@ function IndexPage({ onSelect }: { onSelect: (name: string) => void }) {
                 コンポーネント一覧
                 <span className="ml-2 align-middle text-sm font-medium text-slate-400">{ENTRIES.length}件</span>
               </h1>
+              {/* 外部リンク：プロンプトと解説は Notion、ソースは GitHub */}
+              <ul aria-label="関連リンク" className="mt-3 flex flex-wrap gap-2">
+                {NOTION_DATABASES.map((db) => (
+                  <li key={db.id}>
+                    <a href={notionUrl(db.id)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:text-white">
+                      <BookOpen className="h-3.5 w-3.5" aria-hidden />
+                      Notion：{db.label}
+                      <ArrowUpRight className="h-3 w-3 opacity-50" aria-hidden />
+                      <span className="sr-only">（新しいタブで開く）</span>
+                    </a>
+                  </li>
+                ))}
+                {GITHUB_REPO && (
+                  <li>
+                    <a href={GITHUB_REPO} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:text-white">
+                      <Code2 className="h-3.5 w-3.5" aria-hidden />
+                      GitHub
+                      <ArrowUpRight className="h-3 w-3 opacity-50" aria-hidden />
+                      <span className="sr-only">（新しいタブで開く）</span>
+                    </a>
+                  </li>
+                )}
+              </ul>
             </div>
             <label className="relative block w-full sm:w-80">
               <span className="sr-only">日本語名・英語名・ファイル名で検索</span>
@@ -367,6 +392,11 @@ function Toolbar({ name, onPrev, onNext, onHome, onHide }: ToolbarProps) {
       <button type="button" onClick={onNext} className={btn} aria-label="次のコンポーネント（]）" title="次へ（]）">
         <ChevronRight className="h-4 w-4" />
       </button>
+      {notionPageUrl(name) && (
+        <a href={notionPageUrl(name)} target="_blank" rel="noreferrer" className={btn} aria-label="Notionのページを開く（新しいタブ）" title="Notionで見る">
+          <BookOpen className="h-4 w-4" />
+        </a>
+      )}
       <button type="button" onClick={onHide} className={btn} aria-label="ツールバーを隠す（H）" title="隠す（H で再表示）">
         <EyeOff className="h-4 w-4" />
       </button>

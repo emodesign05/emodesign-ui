@@ -25,3 +25,6 @@ dist-ssr
 
 # バックアップ・作業用ファイル
 *.bak
+
+# Cowork の出力フォルダ
+Claude outputs/
