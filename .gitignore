@@ -28,3 +28,6 @@ dist-ssr
 
 # Cowork の出力フォルダ
 Claude outputs/
+
+# カバー用の画面収録（元ファイル）
+covers-src/

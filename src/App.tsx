@@ -6,6 +6,7 @@ import type { Category } from './componentMeta';
 import PlaygroundShell from './playground/PlaygroundShell';
 import EmbedRoot from './playground/EmbedRoot';
 import { PLAYGROUND_NAMES } from './playground/registry';
+import { CardCover } from './CardCover';
 import { NOTION_DATABASES, notionPageUrl, notionUrl } from './notionLinks';
 import { GITHUB_REPO } from './siteConfig';
 
@@ -308,37 +309,7 @@ function IndexPage({ onSelect }: { onSelect: (name: string) => void }) {
             <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {g.items.map(({ name, meta }) => (
                 <li key={name}>
-                  <button
-                    type="button"
-                    onClick={() => onSelect(name)}
-                    className="group flex h-full w-full items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-indigo-500/60"
-                  >
-                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-[11px] font-bold tabular-nums text-slate-500 transition group-hover:bg-indigo-50 group-hover:text-indigo-600 dark:bg-slate-800 dark:text-slate-400 dark:group-hover:bg-indigo-500/10 dark:group-hover:text-indigo-300">
-                      {String(NAMES.indexOf(name) + 1).padStart(2, '0')}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="flex items-center gap-2">
-                        <span className="truncate text-sm font-bold text-slate-900 dark:text-slate-50">{meta.ja}</span>
-                        {PLAYGROUND_NAMES.has(name) && (
-                          <span className="inline-flex shrink-0 items-center gap-1 rounded bg-indigo-50 px-1.5 py-0.5 text-[10px] font-semibold text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-300">
-                            <SlidersHorizontal className="h-2.5 w-2.5" aria-hidden />
-                            調整可
-                          </span>
-                        )}
-                        {meta.legacy && (
-                          <span className="shrink-0 rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
-                            旧版
-                          </span>
-                        )}
-                      </span>
-                      <span className="mt-0.5 block truncate text-xs text-slate-500 dark:text-slate-400">{meta.en}</span>
-                      <span className="mt-2 block truncate font-mono text-[10px] text-slate-400 dark:text-slate-500">{name}.tsx</span>
-                    </span>
-                    <ChevronRight
-                      className="mt-1 h-4 w-4 shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-indigo-500 dark:text-slate-600"
-                      aria-hidden
-                    />
-                  </button>
+                  <ComponentCard name={name} meta={meta} dot={g.dot} onSelect={onSelect} />
                 </li>
               ))}
             </ul>
@@ -355,6 +326,59 @@ function IndexPage({ onSelect }: { onSelect: (name: string) => void }) {
         )}
       </main>
     </div>
+  );
+}
+
+/* ---------- 一覧のカード（カバー＋名前） ---------- */
+type CardProps = {
+  name: string;
+  meta: ReturnType<typeof getMeta>;
+  dot: string;
+  onSelect: (name: string) => void;
+};
+
+function ComponentCard({ name, meta, dot, onSelect }: CardProps) {
+  // ホバー・キーボードフォーカス中だけカバー動画を再生
+  const [active, setActive] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(name)}
+      onPointerEnter={(e) => e.pointerType === 'mouse' && setActive(true)}
+      onPointerLeave={() => setActive(false)}
+      onFocus={(e) => e.currentTarget.matches(':focus-visible') && setActive(true)}
+      onBlur={() => setActive(false)}
+      className="group flex h-full w-full flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-2.5 pb-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-indigo-500/60"
+    >
+      <CardCover name={name} active={active} label={meta.en} dot={dot} />
+      <span className="flex w-full items-start gap-3 px-1.5">
+        <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-[11px] font-bold tabular-nums text-slate-500 transition group-hover:bg-indigo-50 group-hover:text-indigo-600 dark:bg-slate-800 dark:text-slate-400 dark:group-hover:bg-indigo-500/10 dark:group-hover:text-indigo-300">
+          {String(NAMES.indexOf(name) + 1).padStart(2, '0')}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="flex items-center gap-2">
+            <span className="truncate text-sm font-bold text-slate-900 dark:text-slate-50">{meta.ja}</span>
+            {PLAYGROUND_NAMES.has(name) && (
+              <span className="inline-flex shrink-0 items-center gap-1 rounded bg-indigo-50 px-1.5 py-0.5 text-[10px] font-semibold text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-300">
+                <SlidersHorizontal className="h-2.5 w-2.5" aria-hidden />
+                調整可
+              </span>
+            )}
+            {meta.legacy && (
+              <span className="shrink-0 rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
+                旧版
+              </span>
+            )}
+          </span>
+          <span className="mt-0.5 block truncate text-xs text-slate-500 dark:text-slate-400">{meta.en}</span>
+          <span className="mt-2 block truncate font-mono text-[10px] text-slate-400 dark:text-slate-500">{name}.tsx</span>
+        </span>
+        <ChevronRight
+          className="mt-1 h-4 w-4 shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-indigo-500 dark:text-slate-600"
+          aria-hidden
+        />
+      </span>
+    </button>
   );
 }
 
