@@ -3,8 +3,8 @@
 一覧カード用カバーを作るスクリプト（ffmpeg が必要）
 
 使い方：
-  1. covers-src/ に画面収録を「コンポーネントのファイル名」で置く
-     例）covers-src/TiltCard3D.mov ／ covers-src/BentoGrid.gif（.mov .mp4 .webm .gif に対応）
+  1. covers-src/ に画面収録を「コンポーネントのファイル名」か「英語名（記号・空白なし）」で置く
+     例）covers-src/TiltCard3D.mov ／ covers-src/AccessibleModalDialog.gif（.mov .mp4 .webm .gif に対応）
   2. python3 scripts/make_covers.py
      → public/covers/thumbs/<名前>.webp（静止画）と public/covers/clips/<名前>.mp4（短い動画）を作成
      → src/coverManifest.ts（カバーがあるコンポーネントの一覧）を更新
@@ -68,11 +68,17 @@ def main():
     a = ap.parse_args()
     if SRC.exists():
         comps = {p.stem for p in (ROOT / 'src' / 'components').glob('*.tsx')}
+        # componentMeta.ts の英語名（記号・空白を除いたもの）→ ファイル名 の対応
+        meta = (ROOT / 'src' / 'componentMeta.ts').read_text(encoding='utf-8')
+        alias = {re.sub(r'[^0-9a-z]', '', en.lower()): n
+                 for n, en in re.findall(r"^\s*(\w+):\s*\{[^}]*?en:\s*'([^']+)'", meta, re.M) if n in comps}
         for src in sorted(SRC.iterdir()):
             if src.suffix.lower() not in EXTS:
                 continue
             m = re.match(r'^(.+?)(?:@([0-9.]+))?$', src.stem)
             name, pos = m.group(1), float(m.group(2) or 0.55)
+            if name not in comps:
+                name = alias.get(re.sub(r'[^0-9a-z]', '', name.lower()), name)
             if name not in comps:
                 print(f'  ! {src.name}：src/components/{name}.tsx が無いのでスキップ', file=sys.stderr)
                 continue
