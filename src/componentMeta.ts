@@ -14,7 +14,8 @@ export type Category =
   | '3D・高度表現'
   | '未分類';
 
-export type ComponentMeta = { ja: string; en: string; category: Category; legacy?: boolean };
+/** sortKey：一覧の並び順に使うキー（省略時は en）。似たものを隣に並べたいときに指定する */
+export type ComponentMeta = { ja: string; en: string; category: Category; legacy?: boolean; sortKey?: string };
 
 /** 表示順と配色（ドット・チップ） */
 export const CATEGORIES: { name: Category; en: string; group: '基本' | 'ハイエンド' | 'その他'; dot: string }[] = [
@@ -53,12 +54,29 @@ export const META: Record<string, ComponentMeta> = {
   GlassmorphismCard: { ja: 'グラスモーフィズムコンテナ', en: 'Glassmorphism Card Wrapper', category: 'デザイン・装飾' },
 
   CTAButton: { ja: 'CTAバナー', en: 'High-Conversion CTA Banner', category: 'CTA・コンバージョン' },
-  LeadFormData: { ja: 'リード獲得フォーム', en: 'Multi-Step Lead Form', category: 'CTA・コンバージョン' },
+  LeadFormData: { ja: 'リード獲得フォーム', en: 'Multi-Step Lead Form', category: 'CTA・コンバージョン', sortKey: 'Form 2 Lead' },
   InteractivePricingCards: { ja: '料金プラン表', en: 'Interactive Pricing Cards', category: 'CTA・コンバージョン' },
-  InlineNewsletterSignupBar: { ja: 'メルマガ登録フォーム', en: 'Inline Newsletter Signup', category: 'CTA・コンバージョン' },
+  InlineNewsletterSignupBar: { ja: 'メルマガ登録フォーム', en: 'Inline Newsletter Signup', category: 'CTA・コンバージョン', sortKey: 'Form 3 Newsletter' },
   TestimonialCard: { ja: 'お客様の声', en: 'Testimonial Masonry Grid', category: 'CTA・コンバージョン' },
   ExpandableFAB: { ja: 'フローティングアクションボタン', en: 'Expandable FAB', category: 'CTA・コンバージョン' },
   TimeLeft: { ja: 'カウントダウンタイマー', en: 'Campaign Countdown Timer', category: 'CTA・コンバージョン' },
+
+  /* ---------- 2026/10/11 追加（基本） ---------- */
+  MegaMenu: { ja: 'メガメニュー', en: 'Mega Menu', category: '基本レイアウト' },
+  CompanyInfoAccess: { ja: '会社概要・アクセス', en: 'Company Info + Access', category: '基本レイアウト' },
+  NewsList: { ja: 'お知らせ一覧', en: 'News List', category: 'リッチ・表示' },
+  StepFlow: { ja: 'ご利用の流れ', en: 'Step Flow / Timeline', category: 'リッチ・表示' },
+  ToastNotification: { ja: 'トースト通知', en: 'Toast Notification', category: 'リッチ・表示' },
+  CookieConsent: { ja: 'Cookie同意バナー', en: 'Cookie Consent Banner', category: 'リッチ・表示' },
+  InstagramFeedGrid: { ja: 'Instagram風フィード', en: 'Instagram-style Feed Grid', category: 'リッチ・表示' },
+  TeamMemberCards: { ja: 'スタッフ紹介カード', en: 'Team Member Cards', category: 'デザイン・装飾' },
+  VerticalWritingLayout: { ja: '縦書きレイアウト', en: 'Vertical Writing Layout', category: 'デザイン・装飾' },
+  ComparisonTable: { ja: '料金比較表', en: 'Comparison Table', category: 'CTA・コンバージョン', sortKey: 'Interactive Pricing Cards 2' },
+  ContactForm: { ja: 'お問い合わせフォーム', en: 'Contact Form', category: 'CTA・コンバージョン', sortKey: 'Form 1 Contact' },
+  AnnouncementBar: { ja: 'お知らせバー', en: 'Announcement Bar', category: 'CTA・コンバージョン' },
+  BackToTop: { ja: 'ページトップへ戻る', en: 'Back to Top Button', category: 'CTA・コンバージョン' },
+  MobileStickyCTA: { ja: 'スマホ固定CTAバー', en: 'Mobile Sticky CTA Bar', category: 'CTA・コンバージョン' },
+  BookingCalendar: { ja: '予約カレンダー', en: 'Booking Calendar', category: 'CTA・コンバージョン' },
 
   /* ---------- ハイエンドコンポーネント：動き・演出 ---------- */
   LoadingCounter: { ja: 'プリローダー', en: 'Loading Counter', category: '動き・演出' },
@@ -101,6 +119,18 @@ export const META: Record<string, ComponentMeta> = {
   RotatingCircularText: { ja: '回転テキストバッジ', en: 'Circular Rotating Text', category: '動き・演出' },
   SharedElementTransition: { ja: 'ページ遷移（共有要素）', en: 'Shared Element Transition', category: '動き・演出' },
   GooeyBlobs: { ja: 'グーイー', en: 'Gooey Liquid Blobs', category: '動き・演出' },
+
+  /* ---------- 2026/10/11 追加（動き・演出） ---------- */
+  BeforeAfterSlider: { ja: 'ビフォーアフタースライダー', en: 'Before / After Slider', category: '動き・演出' },
+  ExpandingGallery: { ja: '横に広がる画像アコーディオン', en: 'Expanding Panels Gallery', category: '動き・演出' },
+  LogoCloudMarquee: { ja: 'ロゴクラウド', en: 'Logo Cloud Marquee', category: '動き・演出' },
+  MasonryLightbox: { ja: 'ライトボックス＋石積みギャラリー', en: 'Masonry Gallery + Lightbox', category: '動き・演出' },
+  VideoHeroModal: { ja: '動画ヒーロー＋動画モーダル', en: 'Video Hero + Modal', category: '動き・演出' },
+  FlipCard3D: { ja: 'カード裏返し', en: '3D Flip Card', category: '動き・演出' },
+  GlitchText: { ja: 'グリッチテキスト', en: 'Glitch Text', category: '動き・演出' },
+  VariableFontHover: { ja: '文字ごとのホバー反応', en: 'Variable Font Hover', category: '動き・演出' },
+  BlobMorph: { ja: 'SVGブロブモーフィング', en: 'SVG Blob Morph', category: '動き・演出' },
+  SplitScreenScroll: { ja: '画面分割スクロール', en: 'Split-Screen Scroll', category: '動き・演出' },
 
   /* ---------- ハイエンドコンポーネント：3D・高度表現 ---------- */
   Interactive3DCanvasHero: { ja: '3Dヒーローシーン', en: 'Interactive 3D Canvas Hero', category: '3D・高度表現' },

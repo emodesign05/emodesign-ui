@@ -13,7 +13,7 @@ import { ArrowLeft, ArrowRight, Hand } from 'lucide-react';
  * ========================================================= */
 
 const SLIDES = [
-  { title: 'Kyoto', sub: '静けさの設計', img: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=900&q=80' },
+  { title: 'Kyoto', sub: '静けさの設計', img: 'https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?w=900&q=80' },
   { title: 'Reykjavík', sub: '光と余白', img: 'https://images.unsplash.com/photo-1504829857797-ddff29c27927?w=900&q=80' },
   { title: 'Lisbon', sub: '色彩のリズム', img: 'https://images.unsplash.com/photo-1513735492246-483525079686?w=900&q=80' },
   { title: 'Marrakech', sub: '素材の手触り', img: 'https://images.unsplash.com/photo-1597212618440-806262de4f6b?w=900&q=80' },

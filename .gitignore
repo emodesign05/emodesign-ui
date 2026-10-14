@@ -31,3 +31,7 @@ Claude outputs/
 
 # カバー用の画面収録（元ファイル）
 covers-src/
+
+# 公開しないファイル
+CLAUDE.md
+component-quality-report.md

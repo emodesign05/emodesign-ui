@@ -1,4 +1,4 @@
-import { Component, Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Component, Suspense, lazy, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { ComponentType, ErrorInfo, LazyExoticComponent, ReactNode } from 'react';
 import { ArrowUpRight, BookOpen, ChevronLeft, ChevronRight, Code2, LayoutGrid, Search, EyeOff, SlidersHorizontal, X } from 'lucide-react';
 import { CATEGORIES, getMeta } from './componentMeta';
@@ -37,10 +37,13 @@ const ENTRIES = Object.keys(loaders)
     (a, b) =>
       CATEGORY_ORDER.indexOf(a.meta.category) - CATEGORY_ORDER.indexOf(b.meta.category) ||
       Number(!!a.meta.legacy) - Number(!!b.meta.legacy) ||
-      a.meta.en.localeCompare(b.meta.en, 'en', { sensitivity: 'base' }),
+      (a.meta.sortKey ?? a.meta.en).localeCompare(b.meta.sortKey ?? b.meta.en, 'en', { sensitivity: 'base' }),
   );
 
 const NAMES = ENTRIES.map((e) => e.name);
+
+/** 最後に開いていたコンポーネント（一覧に戻ったとき、そのカードの位置までスクロールして戻すため） */
+let lastViewed: string | null = null;
 
 function MissingDefault({ name }: { name: string }) {
   return (
@@ -168,6 +171,23 @@ function IndexPage({ onSelect }: { onSelect: (name: string) => void }) {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<Category | 'all'>('all');
   const searchRef = useRef<HTMLInputElement>(null);
+
+  // コンポーネントから一覧へ戻ったとき：見ていたカードの位置（＝そのカテゴリのセクション）まで戻す
+  useLayoutEffect(() => {
+    const name = lastViewed;
+    lastViewed = null;
+    if (!name) return;
+    const card = document.querySelector<HTMLElement>(`[data-card="${CSS.escape(name)}"]`);
+    if (!card) return;
+    card.scrollIntoView({ block: 'center' });
+    card.focus({ preventScroll: true });
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      card.animate(
+        [{ boxShadow: '0 0 0 3px rgb(99 102 241 / 0.55)' }, { boxShadow: '0 0 0 3px rgb(99 102 241 / 0)' }],
+        { duration: 1600, easing: 'ease-out' },
+      );
+    }
+  }, []);
 
   // 「/」キーで検索欄へ
   useEffect(() => {
@@ -343,6 +363,7 @@ function ComponentCard({ name, meta, dot, onSelect }: CardProps) {
   return (
     <button
       type="button"
+      data-card={name}
       onClick={() => onSelect(name)}
       onPointerEnter={(e) => e.pointerType === 'mouse' && setActive(true)}
       onPointerLeave={() => setActive(false)}
@@ -442,6 +463,7 @@ function Viewer({ current, search, go }: { current: string | null; search: strin
 
   useEffect(() => {
     currentRef.current = current;
+    if (current) lastViewed = current;
     document.title = current ? `${META_BY_NAME[current]?.ja ?? current} | Preview` : 'コンポーネント一覧 | Preview';
   }, [current]);
 
