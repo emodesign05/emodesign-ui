@@ -35,3 +35,5 @@ covers-src/
 # 公開しないファイル
 CLAUDE.md
 component-quality-report.md
+
+__pycache__/
