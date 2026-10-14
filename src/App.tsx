@@ -9,6 +9,7 @@ import { PLAYGROUND_NAMES } from './playground/registry';
 import { CardCover } from './CardCover';
 import { NOTION_DATABASES, notionPageUrl, notionUrl } from './notionLinks';
 import { GITHUB_REPO } from './siteConfig';
+import { trackPageView } from './analytics';
 
 /* =========================================================
  * コンポーネント一覧プレビュー
@@ -452,6 +453,11 @@ function Toolbar({ name, onPrev, onNext, onHome, onHide }: ToolbarProps) {
 /* ---------- ルート ---------- */
 export default function App() {
   const [route, go] = useHashRoute();
+  // ページビュー計測（子の Viewer が document.title を更新した後に走る）
+  useEffect(() => {
+    const name = route.name ? encodeURIComponent(route.name) : '';
+    trackPageView(route.embed && name ? `/embed/${name}` : `/${name}`);
+  }, [route.name, route.embed]);
   // プレビューだけ（iframe の中身 / 単体表示）
   if (route.embed && route.name) return <EmbedRoot key={route.name} name={route.name} search={route.search} />;
   return <Viewer current={route.embed ? null : route.name} search={route.search} go={go} />;
