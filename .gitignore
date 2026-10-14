@@ -37,3 +37,7 @@ CLAUDE.md
 component-quality-report.md
 
 __pycache__/
+
+# 紹介動画の生成スクリプト（ローカル専用）
+scripts/make_intro_video.py
+scripts/video-assets/
