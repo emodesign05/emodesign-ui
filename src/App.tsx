@@ -470,7 +470,7 @@ function Viewer({ current, search, go }: { current: string | null; search: strin
   useEffect(() => {
     currentRef.current = current;
     if (current) lastViewed = current;
-    document.title = current ? `${META_BY_NAME[current]?.ja ?? current} | Preview` : 'コンポーネント一覧 | Preview';
+    document.title = current ? `${META_BY_NAME[current]?.ja ?? current} | EMODESIGN UI` : 'EMODESIGN UI Components';
   }, [current]);
 
   const step = useCallback(
