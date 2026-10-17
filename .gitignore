@@ -38,6 +38,14 @@ component-quality-report.md
 
 __pycache__/
 
-# 紹介動画の生成スクリプト（ローカル専用）
-scripts/make_intro_video.py
-scripts/video-assets/
+# 作業用スクリプト（カバー・紹介動画の生成。ローカル専用）
+scripts/
+
+# 環境変数（キーや ID は Vercel の Environment Variables で管理する）
+.env
+.env.*
+
+# 秘密鍵・証明書
+*.pem
+*.key
+*.p12
