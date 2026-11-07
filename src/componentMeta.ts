@@ -141,6 +141,11 @@ export const META: Record<string, ComponentMeta> = {
   HoverImageDistortion: { ja: 'ホバー画像ディストーション', en: 'WebGL Hover Distortion', category: '3D・高度表現' },
   ShaderGradientBackground: { ja: 'シェーダーグラデーション背景', en: 'Shader Gradient Background', category: '3D・高度表現' },
   ParticleTextMorph: { ja: 'パーティクル文字', en: 'Particle Text Morph', category: '3D・高度表現' },
+
+  /* ---------- 2026/10/19 追加（3D・高度表現：スクロール・マウス・タップ連動） ---------- */
+  VelocityWebGLGallery: { ja: '速度連動WebGLギャラリー', en: 'Scroll Velocity WebGL Gallery', category: '3D・高度表現' },
+  GlassRefractionHero: { ja: 'ガラス屈折オブジェクト', en: 'Glass Refraction Hero', category: '3D・高度表現' },
+  InkFluidCursor: { ja: 'インク流体', en: 'Ink Fluid Cursor', category: '3D・高度表現' },
 };
 
 export function getMeta(file: string): ComponentMeta {
